@@ -1,0 +1,120 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:CareFlow.ViewModels"
+             xmlns:models="using:CareFlow.Models"
+             mc:Ignorable="d" d:DesignWidth="950" d:DesignHeight="700"
+             x:Class="CareFlow.Views.AvailabilityView"
+             x:DataType="vm:AvailabilityViewModel">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="16" Margin="24">
+
+            <!-- Title Header -->
+            <Border Background="#F0F4F8" CornerRadius="8" Padding="16" BorderBrush="#D1D9E0" BorderThickness="1">
+                <Grid ColumnDefinitions="*, Auto">
+                    <StackPanel Grid.Column="0" Spacing="4">
+                        <TextBlock Text="Diagnostic Service Availability (AC-01)" FontSize="20" FontWeight="SemiBold" Foreground="#1E293B" />
+                        <TextBlock Text="Remaining capacity is calculated dynamically from persisted booking records for any selected date."
+                                   FontSize="13" Foreground="#64748B" />
+                    </StackPanel>
+
+                    <!-- Date Filter and Refresh -->
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                        <DatePicker SelectedDate="{Binding SelectedDate}" />
+                        <Button Content="Check Date" Command="{Binding LoadAvailabilityCommand}"
+                                Padding="12,6" FontWeight="Medium" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Status Indicator -->
+            <TextBlock Text="{Binding StatusMessage}" FontSize="12" Foreground="#475569" FontStyle="Italic" />
+
+            <!-- Service Cards Grid -->
+            <ItemsControl ItemsSource="{Binding Services}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="models:ServiceAvailabilityDto">
+                        <Border Margin="0,4" Padding="16" CornerRadius="8"
+                                BorderThickness="1"
+                                Background="#FFFFFF" BorderBrush="#E2E8F0">
+                            <Grid ColumnDefinitions="1.5*, 1*, 1*, 1*, Auto">
+                                <!-- Service Info -->
+                                <StackPanel Grid.Column="0" Spacing="4" VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <Border Background="#EEF2FF" CornerRadius="4" Padding="6,2">
+                                            <TextBlock Text="{Binding Code}" FontWeight="Bold" Foreground="#4338CA" FontSize="12" />
+                                        </Border>
+                                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="14" Foreground="#0F172A" />
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding Department}" FontSize="11" Foreground="#64748B" />
+                                </StackPanel>
+
+                                <!-- Daily Max Capacity -->
+                                <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <TextBlock Text="Daily Limit" FontSize="11" Foreground="#94A3B8" />
+                                    <TextBlock Text="{Binding DailyCapacity, StringFormat='{}{0} slots'}" FontWeight="SemiBold" FontSize="13" Foreground="#334155" />
+                                </StackPanel>
+
+                                <!-- Confirmed Booked -->
+                                <StackPanel Grid.Column="2" Spacing="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <TextBlock Text="Booked Count" FontSize="11" Foreground="#94A3B8" />
+                                    <TextBlock Text="{Binding BookedCount, StringFormat='{}{0} booked'}" FontWeight="SemiBold" FontSize="13" Foreground="#334155" />
+                                </StackPanel>
+
+                                <!-- Remaining Capacity -->
+                                <StackPanel Grid.Column="3" Spacing="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <TextBlock Text="Remaining" FontSize="11" Foreground="#94A3B8" />
+                                    <TextBlock Text="{Binding RemainingCapacity, StringFormat='{}{0} available'}" FontWeight="Bold" FontSize="14"
+                                               Classes.remAvail="{Binding IsAvailable}"
+                                               Classes.remZero="{Binding !IsAvailable}">
+                                        <TextBlock.Styles>
+                                            <Style Selector="TextBlock.remAvail">
+                                                <Setter Property="Foreground" Value="#16A34A" />
+                                            </Style>
+                                            <Style Selector="TextBlock.remZero">
+                                                <Setter Property="Foreground" Value="#DC2626" />
+                                            </Style>
+                                        </TextBlock.Styles>
+                                    </TextBlock>
+                                </StackPanel>
+
+                                <!-- Status Badge -->
+                                <Border Grid.Column="4" CornerRadius="12" Padding="12,6" VerticalAlignment="Center"
+                                        Classes.badgeAvail="{Binding IsAvailable}"
+                                        Classes.badgeFull="{Binding !IsAvailable}">
+                                    <Border.Styles>
+                                        <Style Selector="Border.badgeAvail">
+                                            <Setter Property="Background" Value="#DCFCE7" />
+                                            <Setter Property="BorderBrush" Value="#86EFAC" />
+                                        </Style>
+                                        <Style Selector="Border.badgeFull">
+                                            <Setter Property="Background" Value="#FEE2E2" />
+                                            <Setter Property="BorderBrush" Value="#FCA5A5" />
+                                        </Style>
+                                    </Border.Styles>
+                                    <TextBlock FontWeight="Bold" FontSize="11"
+                                               Classes.badgeTextAvail="{Binding IsAvailable}"
+                                               Classes.badgeTextFull="{Binding !IsAvailable}">
+                                        <TextBlock.Styles>
+                                            <Style Selector="TextBlock.badgeTextAvail">
+                                                <Setter Property="Text" Value="AVAILABLE" />
+                                                <Setter Property="Foreground" Value="#15803D" />
+                                            </Style>
+                                            <Style Selector="TextBlock.badgeTextFull">
+                                                <Setter Property="Text" Value="FULLY BOOKED" />
+                                                <Setter Property="Foreground" Value="#B91C1C" />
+                                            </Style>
+                                        </TextBlock.Styles>
+                                    </TextBlock>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

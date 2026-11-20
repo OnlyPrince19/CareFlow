@@ -1,0 +1,86 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:CareFlow.ViewModels"
+        xmlns:views="using:CareFlow.Views"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="750"
+        x:Class="CareFlow.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="CareFlow - Outpatient Diagnostic Booking Management"
+        Width="1150" Height="800"
+        MinWidth="900" MinHeight="600"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid RowDefinitions="Auto, *, Auto" Background="#F8FAFC">
+
+        <!-- Top Header Navigation Bar -->
+        <Border Grid.Row="0" Background="#0F172A" Padding="20,14" BorderBrush="#1E293B" BorderThickness="0,0,0,1">
+            <Grid ColumnDefinitions="Auto, *, Auto">
+                <!-- Branding -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                    <Border Background="#2563EB" CornerRadius="8" Width="36" Height="36">
+                        <TextBlock Text="CF" Foreground="#FFFFFF" FontWeight="Heavy" FontSize="16"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <StackPanel Spacing="1">
+                        <TextBlock Text="CareFlow" FontSize="18" FontWeight="Bold" Foreground="#F8FAFC" />
+                        <TextBlock Text="Outpatient Diagnostic Booking Management System" FontSize="11" Foreground="#94A3B8" />
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Academic Course Info Tag -->
+                <Border Grid.Column="2" Background="#1E293B" CornerRadius="6" Padding="10,6" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <TextBlock Text="ITSD81 Performance Task 4" FontSize="11" FontWeight="SemiBold" Foreground="#38BDF8" />
+                        <TextBlock Text="•" Foreground="#64748B" FontSize="11" />
+                        <TextBlock Text="Unit IV: Transactional Workflows" FontSize="11" Foreground="#94A3B8" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Main Content with Styled Tabs -->
+        <TabControl Grid.Row="1" SelectedIndex="{Binding SelectedTabIndex}" Margin="0,4,0,0">
+            <TabControl.Styles>
+                <Style Selector="TabItem">
+                    <Setter Property="FontSize" Value="14" />
+                    <Setter Property="FontWeight" Value="SemiBold" />
+                    <Setter Property="Padding" Value="20,12" />
+                    <Setter Property="Foreground" Value="#64748B" />
+                </Style>
+                <Style Selector="TabItem:selected">
+                    <Setter Property="Foreground" Value="#2563EB" />
+                </Style>
+            </TabControl.Styles>
+
+            <!-- Tab 1: Create Booking -->
+            <TabItem Header="Create Booking">
+                <views:NewBookingView DataContext="{Binding NewBooking}" />
+            </TabItem>
+
+            <!-- Tab 2: Service Availability -->
+            <TabItem Header="Service Availability (AC-01)">
+                <views:AvailabilityView DataContext="{Binding Availability}" />
+            </TabItem>
+
+            <!-- Tab 3: Booking History -->
+            <TabItem Header="Booking History (AC-06)">
+                <views:BookingHistoryView DataContext="{Binding History}" />
+            </TabItem>
+        </TabControl>
+
+        <!-- Bottom Footer Status Bar -->
+        <Border Grid.Row="2" Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="0,1,0,0" Padding="16,6">
+            <Grid ColumnDefinitions="*, Auto">
+                <TextBlock Grid.Column="0" Text="CareFlow SQLite Storage Active • Atomic Transaction Guarantees (AC-01 to AC-06)"
+                           FontSize="11" Foreground="#64748B" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Text="Avalonia MVVM + EF Core 9.0"
+                           FontSize="11" Foreground="#94A3B8" VerticalAlignment="Center" />
+            </Grid>
+        </Border>
+
+    </Grid>
+
+</Window>
